@@ -1,0 +1,10 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Add to TODO",
+	"behavior": "prepend-specific",
+	"noteContentFormat": "- [ ] {{content}} [{{title}}]({{url}})",
+	"properties": [],
+	"triggers": [],
+	"noteNameFormat": "Incoming.md",
+	"path": "1 Projects"
+}

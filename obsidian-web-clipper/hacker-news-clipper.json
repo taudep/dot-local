@@ -1,0 +1,38 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Hacker News",
+	"behavior": "create",
+	"noteContentFormat": "\n#webclip/unread\n\n# {{title}}\n\n{{selectorHtml:#articlebody|remove_html:(\".dog_two,.note-b\")|markdown}}\n\n{{content}}\n===\n{{content}}",
+	"properties": [
+		{
+			"name": "Date-Created",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "#My/WebClippings, #Source/Article",
+			"type": "multitext"
+		},
+		{
+			"name": "URL",
+			"value": "{{url}}",
+			"type": "multitext"
+		},
+		{
+			"name": "Author",
+			"value": "{{selector:.post-body > div[itemprop=\\\"author\\\"] > meta[itemprop=\\\"name\\\"]?content|split:\\\",\\\"|join}}",
+			"type": "text"
+		},
+		{
+			"name": "Published",
+			"value": "{{selectorHtml:.post-body > meta[itemprop=\\\"datePublished\\\"]?content|date:\\\"YYYY-MM-DDTHH:mm:ssZ\\\"}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://news.ycombinator.com/"
+	],
+	"noteNameFormat": "{{title|safe_name}} - HackerNews Discussion",
+	"path": "0 Inbox/Clippings"
+}
