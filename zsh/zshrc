@@ -1,0 +1,17 @@
+# foo
+
+# start Starship, https://starship.rs/
+eval "$(starship init zsh)"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+alias cc='claude'
+
+til() {
+obsidian vault="Todd's Obsidian Vault" quickadd choice="Today I learned"  value-value="$1"
+}
+
+til2() {
+obsidian vault="Todd's Obsidian Vault" quickadd choice="Today I learned"  value-value="$@"
+}
+
