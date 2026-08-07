@@ -1,0 +1,51 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "TIL",
+	"behavior": "create",
+	"noteContentFormat": "{{highlights|map: item => item.text|blockquote|split:\\\"\\n\\\"|join:\\\"\\n\\n\\\"}}\n\nMy take: \n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{title}}",
+			"type": "text"
+		},
+		{
+			"name": "source_name",
+			"value": "{{site}}",
+			"type": "text"
+		},
+		{
+			"name": "source_url",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "published",
+			"value": "{{published}}",
+			"type": "date"
+		},
+		{
+			"name": "original_date",
+			"value": "{{published|date:\\\"YYYY-MM-DD\\\"}}",
+			"type": "text"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "date"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
+		}
+	],
+	"triggers": [],
+	"noteNameFormat": "{{title}}",
+	"path": "1 Projects/taude.xyz Blog/til"
+}

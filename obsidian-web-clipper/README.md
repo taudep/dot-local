@@ -10,6 +10,27 @@ extension, kept here so they're versioned and easy to pull onto a new machine.
 | `github-repository-clipper.json` | GitHub Repository | create |
 | `hacker-news-clipper.json` | Hacker News | create |
 | `link-clipper.json` | Link | create |
+| `til-clipper.json` | TIL | create |
+
+### `til-clipper.json`
+
+Unlike the others, this one's destination isn't a generic inbox — `path` points
+straight at `1 Projects/taude.xyz Blog/til`, the vault folder that
+`taude.xyz`'s `scripts/publish.sh` syncs into `content/til/`. Clipping a page
+with this template drops a ready-to-publish TIL draft directly into place.
+
+Captures: `title`, `source_name` ({{site}}), `source_url` ({{url}}),
+`published`, and any text you'd highlighted on the page (`{{highlights}}`,
+rendered as markdown blockquotes) — followed by a blank "My take: " line for
+your own commentary, kept as plain text so it doesn't render as part of the
+quote on the blog (taude.xyz's TIL/quote layouts only blockquote-style actual
+`>` lines). `original_date` is auto-filled from `published` in `YYYY-MM-DD`
+format specifically to match taude.xyz's backdating feature — set `date`
+there to a historical value and the post sorts/displays at its true original
+place in the timeline instead of whenever it was clipped. `draft` defaults to
+`"true"` (a string, not a real YAML boolean — same as Templater's output,
+and normalized by taude.xyz's `clean_obsidian_links.py` on sync either way),
+so a clip never accidentally publishes before you've reviewed it.
 
 ## Why there's no fully automatic installer
 
