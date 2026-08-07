@@ -20,7 +20,7 @@
 			"type": "text"
 		},
 		{
-			"name": "published",
+			"name": "source_published",
 			"value": "{{published}}",
 			"type": "date"
 		},
