@@ -1,5 +1,3 @@
-# foo
-
 # start Starship, https://starship.rs/
 eval "$(starship init zsh)"
 
@@ -15,3 +13,5 @@ til2() {
 obsidian vault="Todd's Obsidian Vault" quickadd choice="Today I learned"  value-value="$@"
 }
 
+# Machine-local config (PM_NOTE_NAME, PM_BACKEND, etc.) — not tracked in git
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

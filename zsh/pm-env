@@ -1,0 +1,76 @@
+# ---------------------------------------------------------------------------
+# Password manager helpers — supports 1Password (op) and Bitwarden (bw).
+#
+# Source this file from ~/.bash_aliases or ~/.zshrc.
+#
+# Config env vars (set per machine in ~/.zshrc or a machine-local profile):
+#   PM_BACKEND    — force "op" or "bw" (auto-detected from PATH if unset)
+#   PM_OP_VAULT   — 1Password vault name (default: Employee)
+#   PM_NOTE_NAME  — name of the note containing your env vars (required)
+# ---------------------------------------------------------------------------
+
+# Detect which password manager CLI is available.
+_pm_backend() {
+  if [[ -n "$PM_BACKEND" ]]; then
+    echo "$PM_BACKEND"
+    return
+  fi
+  command -v op &>/dev/null && { echo "op"; return; }
+  command -v bw &>/dev/null && { echo "bw"; return; }
+  echo "none"
+}
+
+# Read the plaintext notes field of a password manager item by name.
+_pm_read_note() {
+  local note="$1"
+  local vault="${PM_OP_VAULT:-Employee}"
+  case "$(_pm_backend)" in
+    op)
+      op read "op://${vault}/${note}/notesPlain"
+      ;;
+    bw)
+      if [[ -z "$BW_SESSION" ]]; then
+        echo "error: BW_SESSION not set. Run: bw-unlock" >&2
+        return 1
+      fi
+      bw get item "$note" --session "$BW_SESSION" | jq -r '.notes // empty'
+      ;;
+    *)
+      echo "error: no password manager CLI found. Install 'op' (1Password) or 'bw' (Bitwarden)." >&2
+      return 1
+      ;;
+  esac
+}
+
+# Unlock Bitwarden and export the session key. Run once per terminal session.
+bw-unlock() {
+  export BW_SESSION=$(bw unlock --raw) && echo "Bitwarden session unlocked."
+}
+
+# Load env vars from a password manager note.
+# The note body must contain KEY=value lines; blank lines and # comments are skipped.
+# Usage: op-env                    (uses $PM_NOTE_NAME)
+#        op-env MY-NOTE-NAME       (override note name for this call)
+#        op-env op://Vault/I/field (legacy 1Password URI, passed directly to op read)
+op-env() {
+  local arg="${1:-${PM_NOTE_NAME}}"
+  if [[ -z "$arg" ]]; then
+    echo "error: no note name given. Set PM_NOTE_NAME or pass a note name." >&2
+    return 1
+  fi
+  local content line varname
+  if [[ "$arg" == op://* ]]; then
+    content=$(op read "$arg") || return 1
+  else
+    content=$(_pm_read_note "$arg") || return 1
+  fi
+  while IFS= read -r line; do
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    line="${line#export }"
+    if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.+)$ ]]; then
+      varname="${match[1]}"
+      export "$line"
+      echo "  exported: $varname"
+    fi
+  done <<< "$content"
+}
