@@ -1,0 +1,197 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# If you come from bash you might have to change your $PATH.  # export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/tprekaski/.oh-my-zsh"
+
+export VAULT_KEY="HgIufEYR-qPjp3-cL8qOG8HVkDYXBBK_aqZTd7iqmMw="
+
+DEFAULT_USER="tprekaski"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+ZSH_THEME="agnoster"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+
+# Custom Plugins installed for Todd:
+# fzf-tab from https://github.com/Aloxaf/fzf-tab#oh-my-zsh
+plugins=(git jira ansible zsh-autosuggestions kubectl fzf-tab fzf-zsh-plugin)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+source $HOME/.bash_aliases
+
+# Add zsh-hist https://github.com/marlonrichert/zsh-hist/
+source /Users/tprekaski/.zsh/zsh-hist/zsh-hist.plugin.zsh
+
+export EDITOR=/usr/bin/vim
+
+# Setup PyEnv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Fix the ugly directory listings with the inverse background
+#LS_COLORS='ow=01;36;40'
+#export LS_COLORS
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+if [ /usr/local/bin/kubectl ]; then source <(kubectl completion zsh); fi
+alias config='/opt/homebrew/bin/git --git-dir=/Users/tprekaski/.cfg/ --work-tree=/Users/tprekaski'
+
+# For Gron CLI Json searching tool at https://github.com/tomnomnom/gron
+alias norg="gron --ungron"
+alias ungron="gron --ungron"
+alias lg='lazygit'
+alias mk='minikube kubectl --'
+alias lat='ls -lat'
+
+export FZF_COMPLETION_TRIGGER='%%' 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source /Users/tprekaski/.config/broot/launcher/bash/br
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Setting ZSH History for OS X per https://blog.akatz.org/fixing-macos-zsh-terminal-history-settings/ 
+alias history="history 1"
+HISTSIZE=99999
+HISTFILESIZE=99999 
+SAVEHIST=$HISTSIZE
+
+# New powerlevel10k Prompt: https://github.com/romkatv/powerlevel10k#homebrew
+source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+
+# Autojump: https://github.com/wting/autojump
+[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Created by `pipx` on 2023-10-27 12:14:41
+
+# export infra_dir="/Users/tprekaski/dev/projects/seismic/infra"
+# mkdir -p $HOME/.local/bin
+# mkdir -p $HOME/.kube
+# mkdir -p $HOME/.config
+# echo "export KUBECONFIG=$HOME/.kube/config" >> $HOME/.zshrc
+# echo "export PATH=$infra_dir/tools/path:$HOME/.poetry/bin:$HOME/.local/bin:$PATH" >> $HOME/.zshrc
+# echo "source $infra_dir/tools/path/completions-si" >> $HOME/.zshrc
+# echo "export XDG_CONFIG_HOME=$HOME/.config" >> $HOME/.zshrc
+
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libpq/lib/pkgconfig"
+export XDG_CONFIG_HOME=/Users/tprekaski/.config
+
+# LLM config
+export LLM_USER_PATH=~/.llm
+# export CLAUDE_CONFIG_DIR=~/.copilot
+
+alias c2r="uv run --frozen col2row"
+
+# see more at: https://code.visualstudio.com/docs/terminal/shell-integration
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
+alias r2c="row2col"
+export PATH="$HOME/dev/projects/seismic/infra/si/bin:$HOME/.opencode/bin:/opt/homebrew/opt/libpq/bin:$HOME/miniconda3/bin:$HOME/dev/tools/scripts:/usr/local/sbin:/usr/local/opt/openssl/bin:$HOME/dev/projects/seismic/disc-cmd-line/bash-cli:$HOME/.emacs.d/bin:$HOME/Applications/SnowSQL.app/Contents/MacOS:/Applications/SnowSQL.app/Contents/MacOS:$HOME/.pyenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/share/dotnet:$HOME/.dotnet/tools:$HOME/.local/bin:$HOME/.oh-my-zsh/custom/plugins/fzf-zsh-plugin/bin:$HOME/.fzf/bin:/Applications/Ghostty.app/Contents/MacOS:$HOME/.config/emacs/bin"
+eval "$(op completion zsh)"; compdef _op op
+
+# Load DISC config: ~/.disc-secure if DISC_SECURE is set, otherwise ~/.disc
+source ~/.disc
+
+# Cortex CLI completion (disable via /settings in cortex)
+[[ -s ~/.zsh/completions/cortex.zsh ]] && source ~/.zsh/completions/cortex.zsh
+
+
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nix

@@ -1,0 +1,232 @@
+disc-secure() {
+  export DISC_SECURE=true
+  op-env
+  source ~/.p10k.zsh
+}
+
+source ~/.pm-env
+
+alias sproj='cd /Users/tprekaski/dev/projects/seismic'
+alias wproj='cd /Users/tprekaski/dev/projects/seismic-work'
+alias tproj='cd /Users/tprekaski/dev/projects/test'
+alias proj='cd /Users/tprekaski/c/dev/projects/'
+alias notes='cd ~/OneDrive\ -\ Seismic\ Software/notes'
+alias ll='ls -l'
+# alias ls='exa -lah'
+alias la='ls -la'
+alias laf='la | fzf'
+alias e='emacsclient -q -create-frame --alternate-editor=""'
+alias k='kubectl'
+
+alias d2u='find . -type f -print0 | xargs -0 dos2unix'
+
+alias desktop='cd /mnt/c/Users/ToddPrekaski/Desktop'
+alias nuget='mono /usr/local/bin/nuget.exe'
+alias d='ddgr'
+alias docker=podman
+
+ase() {
+	EDITOR=/usr/bin/vim
+      	ansible-vault edit "$1" --vault-id dev@~/.ansible_vault_password_dev
+}
+
+tdsp-dev() {
+	seismic-tdsp-dev $1 | vim +'setlocal buftype=nofile syntax=json' -
+}
+
+tdsp-qa() {
+	seismic-tdsp-qa $1 | vim +'setlocal buftype=nofile syntax=json' -
+}
+
+tdsp-prod() {
+	seismic-tdsp-prod $1 | vim +'setlocal buftype=nofile syntax=json' -
+}
+
+ma() {
+	seismic-tdsp-prod $1 | tail -n +2 |  jq -rs '.[].MicroappAccountId'
+}
+matrix(){
+	
+	curl -X GET "https://matrix-qa.seismic-dev.com/api/matrix/v1/tenants/tileddev01" -H "accept: application/json" -H "Authorization: Bearer $JWT"
+}
+
+s() {
+	rg $1 .
+}
+
+post-intake-v3() {
+	curl -v -d'@email-enriched-v3-event.json' -H "Authorization: Bearer $SEISMIC_TENANT_TOKEN" https://disc-intake.seismic.com/v3/events
+}
+
+alias ff='rg --files | fzf'
+alias mssql='mssql-cli $1'
+alias lecli='python ./Library/Python/2.7/lib/python/site-packages/lecli/cli.py $1'
+
+# Some Git Helpers for improving my workflow
+# TBD
+
+# Seismic K8s helpers
+alias azqacreds='az aks get-credentials --resource-group=smc-qa01-westus --name=smc-qa01-westus-kube01 --admin'
+alias azdevcreds='az aks get-credentials --resource-group=smc-dev01-westus --name=smc-dev01-westus-kube01 --admin'
+alias k8gp-apihub='kubectl get pods -n integrations'
+alias k8gp-pia='kubectl get pods -n public-integration-api'
+alias k8gp-ep='kubectl get pods -n extensions-platform'
+alias k8l-apihub='kubectl -n extensions-platform logs'
+
+# Git finish will push to current branch
+# Eg. gf "commit message"
+
+#gf() {
+#     CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+#     git add . && git commit -m "$1" && git push origin "$CURRENT_BRANCH"
+#}
+#notes() {
+#   rg . ~/OneDrive\\ -\\ Seismic\\ Software/notes
+#}
+
+gdf() {
+      git diff --name-status $1..$2
+}
+
+alias git-wipe-merged-branches='git branch --merged | grep -v \* | xargs git branch -D'
+# alias git-wipe-all-branches='git for-each-ref --format '%(refname:short)' refs/heads | grep -v master | xargs git branch -D'
+
+sds () {
+	curl -sS "https://service-discovery.seismic.com/api/sds/v1/tenants/$(echo $1 | tr '[:upper:]' '[:lower:]')/services" | jq
+}
+
+tid () {
+	sds $1 | jq .tenantUniqueId
+}
+
+tname () {
+	sds $1 | jq .tenantName
+}
+
+tenv () {
+	sds $1 | jq .environment
+}
+
+kc-status () {
+	/Users/tprekaski/dev/tools/scripts/engagement-debugger/eng-cli-qa kc-status
+}
+
+alias ff="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+
+daw () {
+  open https://admin-prod-disc.seismic.com/dashboard/$1
+}
+
+nb () {
+	git checkout -b $1 origin/master &&
+	git push origin $1 &&
+	git branch --set-upstream-to origin/$1
+}
+
+push-to-prod () {
+     echo "Verify you compared master -> production before merging"
+     read "response?Type YES to continue: "
+     if [[ "$response" != "YES" ]]; then
+         echo "Aborted."
+         return 1
+     fi
+     git pull origin master
+     git checkout production
+     git merge master --ff-only 
+     git push -u origin production
+}
+
+meltano () {
+docker run -v "$(pwd)":/projects \
+             -w /projects \
+             meltano/meltano $@
+}
+
+# walk from https://github.com/antonmedv/walk/tree/v1.7.0, installed via brew
+function lk {
+  cd "$(walk "$@")"
+}
+
+function frg {
+      result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
+        fzf --ansi \
+            --color 'hl:-1:underline,hl+:-1:underline:reverse' \
+            --delimiter ':' \
+            --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
+            --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
+      file=${result%%:*}
+      linenumber=$(echo "${result}" | cut -d: -f2)
+      if [[ -n "$file" ]]; then
+              code -g "$file:$linenumber" # $EDITOR +"${linenumber}" "$file"
+      fi
+    }
+
+function jwt-decode() {
+	echo $1 | cut -d '.' -f 2 | base64 -d | jq
+}
+
+function decode-jwt()
+{
+    read jwt;
+    local headerOrBody="$1";
+    if [ -z "$headerOrBody" ]; then
+        headerOrBody="body";
+    fi;
+    local readPart;
+    if [ "$headerOrBody" = "header" ]; then
+        readPart=1;
+    else
+        readPart=2;
+    fi;
+    local input=$(echo -n $jwt | cut -d '.' -f $readPart);
+    local amountOfPaddingNeeded=$((4 - (${#input} % 4)));
+    if [ $amountOfPaddingNeeded -eq 1 ]; then
+        input="$input"'=';
+    else
+        if [ $amountOfPaddingNeeded -eq 2 ]; then
+            input="$input"'==';
+        fi;
+    fi;
+    echo "$input" | tr '_-' '/+' | base64 -d | jq .
+}
+
+function sm-dev()
+{
+     aws secretsmanager get-secret-value --profile dev --secret-id $1
+}
+
+function sm-qa()
+{
+     aws secretsmanager get-secret-value --profile qa --secret-id $1
+}
+
+function sm-uat()
+{
+     aws secretsmanager get-secret-value --profile uat --secret-id $1
+}
+
+function sm-prod()
+{
+     aws secretsmanager get-secret-value --profile prod --secret-id $1
+}
+
+function snowflake-pub-key()
+{
+    echo $1 | grep -v '^-----' | tr -d '\n'
+}
+
+alias sdm-connect-all='sdm connect dev-gcp-us-west1-yak-strongdm-edit && sdm connect dev-ibm-us-south-raven-strongdm-edit && sdm connect dev-oci-us-phoenix-1-orca-strongdm-edit && sdm connect qa-aws-us-east-1-impala-strongdm-edit && sdm connect qa-aws-us-east-1-riesling-strongdm-edit && sdm connect qa-aws-us-west-1-testolate-strongdm-edit && sdm connect qa-az-eastasia-hyena-strongdm-edit && sdm connect qa-az-westus-wombat-strongdm-edit && sdm connect qa-gcp-asia-east2-newt-strongdm-edit && sdm connect qa-ibm-us-south-wolf-strongdm-edit && sdm connect qa-oci-us-phoenix-1-narwhal-strongdm-edit'
+
+alias cc='claude --dangerously-skip-permissions'
+
+alias gs='DISC_SECURE=true open -a Ghostty'
+
+til() {
+obsidian vault="Todd's Obsidian Vault" quickadd choice="Today I learned"  value-value="$1"
+}
+
+
+todo() {
+obsidian vault="Todd's Obsidian Vault" quickadd choice="Incoming"  value-value="$1"
+}
+
